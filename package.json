@@ -1,0 +1,27 @@
+{
+  "name": "dotjs-zen",
+  "version": "1.0.0",
+  "description": "dotjs. browserify. awesome!",
+  "bin": {
+    "dotjsd": "./dotjsd.js"
+  },
+  "scripts": {
+    "test": "true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nathan7/dotjs-zen.git"
+  },
+  "keywords": [
+    "dotjs",
+    "browserify"
+  ],
+  "author": "Nathan Zadoks",
+  "license": "BSD",
+  "dependencies": {
+    "browserify": "~1.16.1",
+    "fs-watch-tree": "~0.2.2",
+    "debug": "~0.7.0",
+    "flist": "~1.0.1"
+  }
+}

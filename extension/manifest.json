@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "dotjs-zen",
+  "version": "1.0",
+  "description": "~/.js with more zen",
+  "icons": { "48": "icon48.png",
+            "128": "icon128.png" },
+  "content_scripts": [{
+    "all_frames": true,
+    "run_at":     "document_start",
+    "matches":    ["http://*/*", "https://*/*"],
+    "js":         ["dotjs-zen.js"]
+  }],
+  "permissions": [
+    "tabs"
+  ]
+}
