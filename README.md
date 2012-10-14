@@ -1,6 +1,6 @@
 dotjs-zen
 =========
-dotjs-zen is [dotjs] with a [node.js] daemon.
+dotjs-zen is [dotjs] with a [node.js] daemon and [Browserify] support.
 Unlike dotjs itself it does not use or include jQuery, but you're free to `require('jquery')`.
 For showing debugging information, run it with `DEBUG='*'`.
 
