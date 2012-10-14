@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+var net=require('net');
 var http=require('http');
 var fs=require('fs');
 var flist=require('flist');
@@ -10,7 +11,20 @@ var path=require('path');
 var browserify=require('browserify');
 var watchTree=require('fs-watch-tree').watchTree;
 
-process.chdir(path.join(process.env.HOME,'.js'));
+var argv=require('optimist')
+    .usage('$0 [-d [pidfile] [-l logfile]] [-h ~/.js] [-p port]')
+    .default('p',3131)
+    .default('l',path.join('/tmp',process.env.USER+'_djsd.log'))
+    .default('h',path.join(process.env.HOME,'.js'))
+    .argv;
+if(argv.d===true) argv.d=path.join('/tmp',process.env.USER+'_djsd.pid');
+
+process.chdir(argv.h);
+
+if(argv.d){
+    var daemon=require('daemon');
+    daemon.daemonize(argv.l,argv.d);
+}
 
 var cache=Object.create(null);
 
@@ -75,7 +89,7 @@ var bundle=(function(){
             res.end(bundle,'utf8');
         });
     });
-    server.listen(3131,function(){
+    server.listen(argv.p,function(){
         debug('listening');
     });
 })();
