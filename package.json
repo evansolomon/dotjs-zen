@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "dotjs. browserify. awesome!",
   "bin": {
-    "dotjsd": "./dotjsd.js"
+    "djsd": "./dotjsd.js"
   },
   "scripts": {
     "test": "true"
