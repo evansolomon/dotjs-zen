@@ -7,7 +7,8 @@ For showing debugging information, run it with `DEBUG='*'`.
 what?
 =====
 dotjs-zen serves bits of JavaScript from your ~/.js folder.
-For github.com, it'll look for `~/.js/github.com.js` and `~/.js/github.com/*.js`.
+
+For gist.github.com, it'll look for `~/.js/gist.github.com.js`, `~/.js/gist.github.com/*.js`, `~/.js/github.com.js`, `~/.js/github.com/*.js`, `~/.js/com.js` and `~/.js/com/*.js`.
 
 dotjs-zen uses [Browserify] to bundle all the scripts and the things they `require()` up and serves them to your browser.
 
