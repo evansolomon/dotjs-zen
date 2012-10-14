@@ -20,7 +20,6 @@
   "license": "BSD",
   "dependencies": {
     "browserify": "~1.16.1",
-    "fs-watch-tree": "~0.2.2",
     "debug": "~0.7.0",
     "flist": "~1.0.1",
     "optimist": "~0.3.5"

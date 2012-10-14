@@ -9,7 +9,6 @@ var url=require('url');
 var path=require('path');
 
 var browserify=require('browserify');
-var watchTree=require('fs-watch-tree').watchTree;
 
 var argv=require('optimist')
     .usage('$0 [-d [pidfile] [-l logfile]] [-h ~/.js] [-p port]')
@@ -27,20 +26,6 @@ if(argv.d){
 }
 
 var cache=Object.create(null);
-
-(function(){
-    var debug=require('debug')('cache');
-    watchTree('.',{exclude:[/^\./]},function(event){
-        var match=event.name.match(/^([^\/]+)(?:\/.*)?\.js$/);
-        if(!match) return;
-        var domain=match[1];
-        if(cache[domain]&&delete cache[domain])
-            debug('invalidated '+domain+' due to change in '+event.name);
-        else
-            debug(event.name+' changed but '+domain+' is not cached');
-    });
-})();
-
 var bundle=(function(){
     var debug=require('debug')('bundler');
     function bundle(domain,cb){
@@ -49,9 +34,9 @@ var bundle=(function(){
             return cb(null,cache[domain].bundle());
         }
         var domainbundle=cache[domain]=browserify({
-            cache: '.browserify_cache.json',
-            watch: true //in case require()'d stuff changes
+            cache: '.browserify_cache.json'
         });
+        domainbundle.watches=Object.create(null);
         debug('building '+domain);
         async.filter([domain,domain+'.js'],fs.exists,gotExistent);
         function gotExistent(items){
@@ -68,10 +53,35 @@ var bundle=(function(){
             });
         }
         function bundleBunch(files){
-            files.forEach(function(file){
-                domainbundle.addEntry(file);
+            var bundleStr;
+            try{
+                files.forEach(function(file){
+                    domainbundle.addEntry(file);
+                });
+                bundleStr=domainbundle.bundle();
+            }
+            catch(e){
+                process.nextTick(function(){
+                    var message='there was an error browserifying the scripts for '+domain+': '+e.toString();
+                    debug(message);
+                    cb(null,'window.alert($);'.replace('$',JSON.stringify(message)));
+                });
+                return drop();
+            }
+            cb(null,bundleStr);
+            Object.keys(domainbundle.files).forEach(function(file){
+                debug('watching '+file);
+                domainbundle.watches[file]=fs.watch(file,drop);
             });
-            cb(null,domainbundle.bundle());
+        }
+        function drop(){
+            Object.keys(domainbundle.watches).forEach(function(file){
+                debug('dropping watch '+file);
+                if(domainbundle.watches[file].close) domainbundle.watches[file].close();
+                delete domainbundle.watches[file];
+            });
+            debug('dropping '+domain);
+            delete cache[domain];
         }
     }
     return bundle;
