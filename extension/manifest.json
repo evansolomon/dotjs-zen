@@ -5,13 +5,13 @@
   "description": "~/.js with more zen",
   "icons": { "48": "icon48.png",
             "128": "icon128.png" },
-  "content_scripts": [{
-    "all_frames": true,
-    "run_at":     "document_start",
-    "matches":    ["http://*/*", "https://*/*"],
-    "js":         ["dotjs-zen.js"]
-  }],
+  "background": {
+    "scripts": ["bg.js"],
+    "persistent": false
+  },
   "permissions": [
+    "http://*/*",
+    "https://*/*",
     "tabs"
   ]
 }
