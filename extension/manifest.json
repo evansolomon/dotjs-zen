@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "dotjs-zen",
-  "version": "1.0",
+  "version": "2.1",
   "description": "~/.js with more zen",
   "icons": { "48": "icon48.png",
             "128": "icon128.png" },
