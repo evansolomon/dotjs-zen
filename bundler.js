@@ -40,6 +40,14 @@ module.exports = function bundle(domain, cb) {
         });
         domainbundle.watches = Object.create(null);
 
+        var cwd = process.cwd();
+        domainbundle.register(function(code, fnameAbsolute) {
+            var fname = path.relative(cwd, fnameAbsolute);
+            if (files.indexOf(fname) == -1) return code;
+            var message = JSON.stringify('error in dotjs-zen script ' + fname + ': ');
+            return 'try{\n' + code + '\n} catch(e){ console.log(' + message + '); console.log(e.stack); }';
+        });
+
         try {
             files.forEach(function(file) {
                 domainbundle.addEntry(file);
