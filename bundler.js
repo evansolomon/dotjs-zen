@@ -15,7 +15,16 @@ module.exports = function bundle(domain, cb) {
 
     debug('building ' + domain);
 
-    async.filter([domain, domain + '.js'], fs.exists, function(items) {
+    var files = [];
+    var domainbits = domain.split('.');
+
+    for (var i = 0; i < domainbits.length; i++) {
+        var base = domainbits.slice(i).join('.');
+        files.push(base);
+        files.push(base + '.js');
+    }
+
+    async.filter(files, fs.exists, function(items) {
         async.map(items, flist, foundFiles);
     });
 
