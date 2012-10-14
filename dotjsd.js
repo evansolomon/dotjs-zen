@@ -54,6 +54,10 @@ var bundle=(function(){
         }
         function bundleBunch(files){
             var bundleStr;
+            domainbundle.register(function(body,file){
+                console.log(JSON.stringify(body.slice(0,100)),file);
+                return body;
+            });
             try{
                 files.forEach(function(file){
                     domainbundle.addEntry(file);
@@ -69,7 +73,7 @@ var bundle=(function(){
                 return drop();
             }
             cb(null,bundleStr);
-            Object.keys(domainbundle.files).forEach(function(file){
+            Object.keys(domainbundle.files).concat(files).forEach(function(file){
                 debug('watching '+file);
                 domainbundle.watches[file]=fs.watch(file,drop);
             });
