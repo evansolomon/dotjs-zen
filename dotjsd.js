@@ -20,13 +20,16 @@ if (argv.d) {
     var fs = require('fs');
     var args = [process.argv[1]];
     Object.keys(argv).forEach(function(key){
-        if (key.match(/^[a-z]$/) && ['d', 'l'].indexOf(key) != -1) args.push('-' + key, argv[key]);
+        if (key.match(/^[a-z]$/) && ['d', 'l'].indexOf(key) == -1) args.push('-' + key, argv[key]);
     });
-    child_process.spawn(process.argv[0], args, {
+    var child = child_process.spawn(process.argv[0], args, {
         detached: true,
         stdio: ['ignore', fs.openSync(argv.l, 'a'), fs.openSync(argv.l, 'a')]
     });
-    process.exit();
+    process.nextTick(function() {
+        fs.writeFile(argv.d, child.pid + '\n');
+        process.exit();
+    });
 }
 
 var debug = require('debug')('http');
