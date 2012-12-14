@@ -61,7 +61,8 @@ module.exports = function bundle(domain, cb) {
             files.forEach(function(file) {
                 domainbundle.addEntry(file);
             });
-        } catch (e) {
+        }
+        catch (e) {
             return process.nextTick(function() {
                 var message = 'there was an error browserifying the scripts for ' + domain + ': ' + e.toString();
                 console.log(message);
@@ -70,6 +71,7 @@ module.exports = function bundle(domain, cb) {
         }
         Object.keys(domainbundle.files).concat(files).forEach(function(file) {
             debug('watching ' + file);
+            if (!fs.existsSync(file)) return;
             domainbundle.watches[file] = fs.watch(file, drop.bind(null, domain));
         });
         cb(null, domainbundle.bundle());
