@@ -2,4 +2,5 @@
 pluginpath="$(dirname "$(readlink -f $0)")"
 target="$HOME/.js"
 rm -rvf "$target"
-ln -svf "$pluginpath/js" "$target" 
+ln -svf "$pluginpath/js" "$target"
+(cd "$pluginpath" && npm install)
