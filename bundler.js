@@ -15,7 +15,7 @@ module.exports = function bundle(domain, cb) {
 
     debug('building ' + domain);
 
-    var files = [];
+    var files = ['default.js'];
     var domainbits = domain.split('.');
 
     for (var i = 0; i < domainbits.length; i++) {
