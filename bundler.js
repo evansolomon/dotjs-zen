@@ -4,15 +4,9 @@ var async = require('async');
 var path = require('path');
 var browserify = require('browserify');
 
-var cache = Object.create(null);
 var debug = require('debug')('bundler');
 
 module.exports = function bundle(domain, cb) {
-    if (cache[domain]) {
-        debug('served ' + domain + ' from cache');
-        return cb(null, cache[domain].bundle());
-    }
-
     debug('building ' + domain);
 
     var files = ['default.js'];
@@ -44,10 +38,9 @@ module.exports = function bundle(domain, cb) {
     }
 
     function bundleBunch(files) {
-        var domainbundle = cache[domain] = browserify({
+        var domainbundle = browserify({
             cache: '.browserify_cache.json'
         });
-        domainbundle.watches = Object.create(null);
 
         var cwd = process.cwd();
         domainbundle.register(function(code, fnameAbsolute) {
@@ -69,23 +62,7 @@ module.exports = function bundle(domain, cb) {
                 cb(null, 'window.alert($);'.replace('$', JSON.stringify(message)));
             });
         }
-        Object.keys(domainbundle.files).concat(files).forEach(function(file) {
-            debug('watching ' + file);
-            if (!fs.existsSync(file)) return;
-            domainbundle.watches[file] = fs.watch(file, drop.bind(null, domain));
-        });
         cb(null, domainbundle.bundle());
     }
 
 };
-
-function drop(domain) {
-    var domainbundle = cache[domain];
-    Object.keys(domainbundle.watches).forEach(function(file) {
-        debug('dropping watch ' + file);
-        if (domainbundle.watches[file].close) domainbundle.watches[file].close();
-        delete domainbundle.watches[file];
-    });
-    debug('dropping ' + domain);
-    delete cache[domain];
-}
