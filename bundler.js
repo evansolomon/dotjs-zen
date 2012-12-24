@@ -9,13 +9,14 @@ var debug = require('debug')('bundler');
 module.exports = function bundle(domain, cb) {
     debug('building ' + domain);
 
-    var files = ['default.js'];
+    var files = ['default.js', 'default.coffee'];
     var domainbits = domain.split('.');
 
     for (var i = 0; i < domainbits.length; i++) {
         var base = domainbits.slice(i).join('.');
         files.push(base);
         files.push(base + '.js');
+        files.push(base + '.coffee');
     }
 
     async.filter(files, fs.exists, function(items) {
