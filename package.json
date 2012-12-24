@@ -1,6 +1,6 @@
 {
   "name": "dotjs-zen",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "dotjs. browserify. awesome!",
   "bin": {
     "djsd": "./dotjsd.js"
